@@ -1,5 +1,12 @@
 import { ROLE } from 'src/untility/enum/role-user';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  Timestamp,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class User {
@@ -10,21 +17,30 @@ export class User {
   fullName: string;
 
   @Column({ unique: true })
-  username: string;
-
-  @Column({ unique: true })
   email: string;
 
   @Column()
   phone: string;
+
   @Column()
   address: string;
+
+  @Column()
+  nation: string;
+
+  @Column()
+  postcode: string;
   @Column()
   password: string;
-  @Column({ type: 'enum', enum: ROLE })
+  @Column({ type: 'enum', enum: ROLE, default: ROLE.USER })
   role: ROLE;
-  @Column()
+  @Column({ default: '' })
   resetToken: string;
-  @Column()
+  @Column({ default: '' })
   createToken: string;
+
+  @CreateDateColumn()
+  createdAt: Timestamp;
+  @UpdateDateColumn()
+  updated: Timestamp;
 }
