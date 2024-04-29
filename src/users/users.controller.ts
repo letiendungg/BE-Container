@@ -28,7 +28,11 @@ export class UsersController {
   async login(@Body() signupDto: loginDto) {
     return await this.usersService.login(signupDto);
   }
-
+  @Public()
+  @Post('confirmCode/:token')
+  async confirmCode(@Body('code') code: string, @Param('token') token: string) {
+    return await this.usersService.confirmCode(code, token);
+  }
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);

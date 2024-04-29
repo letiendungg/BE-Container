@@ -42,6 +42,7 @@ export class CurrentUserMiddleware implements NestMiddleware {
   }
 }
 
-interface JwtPayload {
+export interface JwtPayload {
   userId: string;
+  email: string;
 }

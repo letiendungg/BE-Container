@@ -25,13 +25,19 @@ export class User {
   @Column()
   address: string;
 
+  @Column({ default: '' })
+  avatar: string;
   @Column()
   nation: string;
 
   @Column()
   postcode: string;
+  @Column({ default: false })
+  isActive: boolean;
   @Column()
   password: string;
+  @Column()
+  code: string;
   @Column({ type: 'enum', enum: ROLE, default: ROLE.USER })
   role: ROLE;
   @Column({ default: '' })
