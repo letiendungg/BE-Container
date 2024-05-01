@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { LoggerInterceptor } from './untility/interceptor/logging.interceptor';
 import { AuthenticationGuard } from './untility/guards/authentication.guard';
 import { AuthorizationGuard } from './untility/guards/authorization.guard';
-import { ValidationPipe } from '@nestjs/common';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { config } from 'dotenv';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -19,6 +19,7 @@ async function bootstrap() {
     new AuthenticationGuard(new Reflector()),
     new AuthorizationGuard(new Reflector()),
   );
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   await app.listen(3000);
 }
 bootstrap();

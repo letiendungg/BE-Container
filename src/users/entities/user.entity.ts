@@ -22,21 +22,21 @@ export class User {
   @Column()
   phone: string;
 
-  @Column()
+  @Column({ default: '' })
   address: string;
 
   @Column({ default: '' })
   avatar: string;
-  @Column()
+  @Column({ default: '' })
   nation: string;
 
-  @Column()
+  @Column({ default: '' })
   postcode: string;
   @Column({ default: false })
   isActive: boolean;
   @Column()
   password: string;
-  @Column()
+  @Column({ default: '' })
   code: string;
   @Column({ type: 'enum', enum: ROLE, default: ROLE.USER })
   role: ROLE;

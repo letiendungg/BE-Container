@@ -31,8 +31,9 @@ export class CurrentUserMiddleware implements NestMiddleware {
     try {
       const { userId } = jwt.verify(
         token,
-        process.env.JWT_SECRETKEY,
+        process.env.JWT_SECRET,
       ) as JwtPayload;
+      console.log(userId);
       const currentUser = await this.userService.validateUser(+userId);
       req.currentUser = currentUser;
       next();

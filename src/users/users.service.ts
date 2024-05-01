@@ -1,6 +1,7 @@
 import { loginDto } from './dto/signin.dto';
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -8,12 +9,14 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { signupDto } from './dto/signup.dto';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcryptjs';
 import { uid } from 'uid';
 import { JwtPayload } from 'src/untility/middleware/current-user.middleware';
+import { UserList, UsersDTO } from './dto/users.dto';
+import { ROLE } from 'src/untility/enum/role-user';
 
 @Injectable()
 export class UsersService {
@@ -22,7 +25,9 @@ export class UsersService {
   ) {}
 
   async findUserByEmail(email: string): Promise<User | null> {
-    return await this.userRepository.findOne({ where: { email: email } });
+    return await this.userRepository.findOne({
+      where: { email: email, isActive: true },
+    });
   }
   async validateUser(id: number): Promise<User> {
     return await this.userRepository.findOneBy({ id });
@@ -31,7 +36,7 @@ export class UsersService {
     const userExist = await this.findUserByEmail(signupDto.email);
     if (userExist) {
       throw new BadRequestException(
-        'Email is existing !!! Please try another email',
+        'Email is existing !!! Please t1ry another email',
       );
     }
 
@@ -46,6 +51,7 @@ export class UsersService {
     const createdUser = await this.userRepository.save(user);
     delete createdUser.password;
     delete createdUser.code;
+    //send email to confirm code;
     return createdUser;
   }
   async login(loginDto: loginDto): Promise<any> {
@@ -74,9 +80,12 @@ export class UsersService {
 
     return { user: result, access_token: token };
   }
-  async confirmCode(code: string, token: string): Promise<any> {
+  async validateUserByToken(token: string): Promise<any> {
     const decode = jwt.decode(token) as JwtPayload;
-    const email = decode.email;
+    return decode.email;
+  }
+  async confirmCode(code: string, token: string): Promise<any> {
+    const email = await this.validateUserByToken(code);
     const user = await this.findUserByEmail(email);
     if (!user) {
       throw new BadRequestException('Invalid token');
@@ -89,23 +98,107 @@ export class UsersService {
     await this.userRepository.save(user);
     return 'Confirm success!!!';
   }
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+
+  async forgotSendEmail(email: string): Promise<any> {
+    const user = await this.findUserByEmail(email);
+    if (!user) {
+      throw new NotFoundException('Email not found!!!');
+    }
+    const token = jwt.sign({ email: email }, process.env.JWT_SECRET, {
+      expiresIn: '1d',
+    });
+    user.resetToken = token;
+    await this.userRepository.save(user);
+    //send email to change password
+    return 'Check your email to reset password';
+  }
+  async forgotPassword(token: string, password: string): Promise<any> {
+    const email = await this.validateUserByToken(token);
+    const user = await this.findUserByEmail(email);
+    if (!user) {
+      throw new NotFoundException('Token is expired !!');
+    }
+    const hashedPassword = bcrypt.hashSync(password, 10);
+    user.password = hashedPassword;
+    user.resetToken = '';
+    await this.userRepository.save(user);
+    return 'Update password success';
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async changePassword(
+    user: User,
+    password: string,
+    newPassword: string,
+  ): Promise<any> {
+    if (!user) {
+      throw new BadRequestException('Unauthentication !!!');
+    }
+    const isMatch = bcrypt.compareSync(password, user.password);
+    if (!isMatch) {
+      throw new BadRequestException('Old password is incorrect!!!');
+    }
+    const hashedPassword = bcrypt.hashSync(newPassword, 10);
+    user.password = hashedPassword;
+    await this.userRepository.save(user);
+    return 'Change password success!!!';
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async create(createUserDto: CreateUserDto): Promise<any> {
+    const userExisting = await this.findUserByEmail(createUserDto.email);
+    if (userExisting) {
+      throw new BadRequestException(
+        'Email is existing!!!! Please give another email',
+      );
+    }
+    const user = new User();
+    Object.assign(user, createUserDto);
+    const password = uid(8);
+    const hashedPassword = bcrypt.hashSync(password, 10);
+    user.password = hashedPassword;
+    user.isActive = true;
+    //send email for user to login includes password and email
+
+    await this.userRepository.save(user);
+    return 'Created success user';
   }
 
+  async findAll(
+    page: number,
+    limit: number,
+    search: string,
+  ): Promise<UsersDTO> {
+    const skip = (page - 1) * limit;
+    const [users, total] = await this.userRepository.findAndCount({
+      where: { isActive: true, fullName: Like(`%${search}%`) },
+      skip: skip,
+      take: limit,
+    });
+    const totalPage = Math.ceil(total / limit);
+    return { total, totalPage, page, limit, users: users };
+  }
+
+  async findOne(id: number): Promise<UserList> {
+    return await this.userRepository.findOneBy({ id, isActive: true });
+  }
+
+  async delete(id: number, user: User): Promise<any> {
+    const isAllow = this.checkAuthor(id, user);
+    if (!isAllow) {
+      throw new ForbiddenException('You are not allowed for this action');
+    }
+    const userFound = await this.findOne(id);
+    if (!userFound) {
+      throw new NotFoundException('User not found');
+    }
+    userFound.isActive = false;
+    await this.userRepository.save(userFound);
+    return 'Delete success user';
+  }
+
+  checkAuthor(id: number, user: User) {
+    return user.id === id || user.role === ROLE.ADMIN;
+  }
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
   }
 }
