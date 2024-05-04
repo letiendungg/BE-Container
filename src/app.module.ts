@@ -9,6 +9,10 @@ import { AuthenticationGuard } from './untility/guards/authentication.guard';
 import { AuthorizationGuard } from './untility/guards/authorization.guard';
 import { DataSource } from 'typeorm';
 import { CurrentUserMiddleware } from './untility/middleware/current-user.middleware';
+import { CategoriesModule } from './categories/categories.module';
+import { Category } from './categories/entities/category.entity';
+import { AreasModule } from './areas/areas.module';
+import { Area } from './areas/entities/area.entity';
 
 @Module({
   imports: [
@@ -19,10 +23,12 @@ import { CurrentUserMiddleware } from './untility/middleware/current-user.middle
       username: 'root',
       password: 'lehao1911',
       database: 'container',
-      entities: [User],
+      entities: [User, Category, Area],
       synchronize: true,
     }),
     UsersModule,
+    CategoriesModule,
+    AreasModule,
   ],
   controllers: [AppController],
   providers: [
