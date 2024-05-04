@@ -99,8 +99,13 @@ export class UsersController {
     return await this.usersService.delete(+id, user);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  @UseInterceptors(new SerializeInterceptor(UserList))
+  @Put(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @UserCurrent() user: User,
+  ): Promise<UserList> {
+    return await this.usersService.update(+id, updateUserDto, user);
   }
 }

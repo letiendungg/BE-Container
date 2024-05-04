@@ -21,9 +21,10 @@ export class UserList {
   nation: string;
   postcode: string;
   isActive: boolean;
-  code: string;
   role: ROLE;
 
+  @Exclude()
+  code: string;
   @Exclude()
   password: string;
   @Exclude()

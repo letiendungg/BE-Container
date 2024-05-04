@@ -198,7 +198,22 @@ export class UsersService {
   checkAuthor(id: number, user: User) {
     return user.id === id || user.role === ROLE.ADMIN;
   }
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(
+    id: number,
+    updateUserDto: UpdateUserDto,
+    currentUser: User,
+  ): Promise<UserList> {
+    const user = await this.findOne(id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    const isAllowed = this.checkAuthor(id, currentUser);
+    if (!isAllowed) {
+      throw new ForbiddenException('You not allowed update user');
+    }
+    Object.assign(user, updateUserDto);
+    const updatedUser = await this.userRepository.save(user);
+    delete updatedUser.password;
+    return updatedUser;
   }
 }
