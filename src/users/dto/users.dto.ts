@@ -1,4 +1,5 @@
 import { Exclude, Expose, Type } from 'class-transformer';
+import { Area } from 'src/areas/entities/area.entity';
 import { ROLE } from 'src/untility/enum/role-user';
 import { Timestamp } from 'typeorm';
 
@@ -21,6 +22,7 @@ export class UserList {
   nation: string;
   postcode: string;
   isActive: boolean;
+  area: Area;
   role: ROLE;
 
   @Exclude()

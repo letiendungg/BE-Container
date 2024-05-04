@@ -1,5 +1,12 @@
 import { AreaEnum } from 'src/untility/enum/area';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from 'src/users/entities/user.entity';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Area {
@@ -11,4 +18,6 @@ export class Area {
   place: string;
   @Column({ default: false })
   isDeleted: boolean;
+  @OneToMany(() => User, (user) => user.area)
+  users: User[];
 }

@@ -1,4 +1,12 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { Area } from 'src/areas/entities/area.entity';
 import { ROLE } from 'src/untility/enum/role-user';
 
 export class CreateUserDto {
@@ -14,4 +22,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsEnum(ROLE)
   role: ROLE;
+  @IsOptional()
+  @IsNumber()
+  area: Area;
 }

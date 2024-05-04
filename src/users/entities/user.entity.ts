@@ -1,8 +1,10 @@
+import { Area } from 'src/areas/entities/area.entity';
 import { ROLE } from 'src/untility/enum/role-user';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   Timestamp,
   UpdateDateColumn,
@@ -49,4 +51,7 @@ export class User {
   createdAt: Timestamp;
   @UpdateDateColumn()
   updated: Timestamp;
+
+  @ManyToOne(() => Area, (area) => area.users, { nullable: true })
+  area: Area;
 }

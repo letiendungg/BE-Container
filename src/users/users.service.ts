@@ -27,6 +27,7 @@ export class UsersService {
   async findUserByEmail(email: string): Promise<User | null> {
     return await this.userRepository.findOne({
       where: { email: email, isActive: true },
+      relations: { area: true },
     });
   }
   async validateUser(id: number): Promise<User> {
@@ -170,6 +171,7 @@ export class UsersService {
     const skip = (page - 1) * limit;
     const [users, total] = await this.userRepository.findAndCount({
       where: { isActive: true, fullName: Like(`%${search}%`) },
+      relations: { area: true },
       skip: skip,
       take: limit,
     });
@@ -178,7 +180,12 @@ export class UsersService {
   }
 
   async findOne(id: number): Promise<UserList> {
-    return await this.userRepository.findOneBy({ id, isActive: true });
+    return await this.userRepository.findOne({
+      where: { id, isActive: true },
+      relations: {
+        area: true,
+      },
+    });
   }
 
   async delete(id: number, user: User): Promise<any> {
