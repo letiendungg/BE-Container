@@ -1,10 +1,12 @@
 import { Area } from 'src/areas/entities/area.entity';
+import { Ship } from 'src/ships/entities/ship.entity';
 import { ROLE } from 'src/untility/enum/role-user';
 import {
   Column,
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   Timestamp,
   UpdateDateColumn,
@@ -54,4 +56,6 @@ export class User {
 
   @ManyToOne(() => Area, (area) => area.users, { nullable: true })
   area: Area;
+  @OneToMany(() => Ship, (ship) => ship.owner)
+  ships: Ship[];
 }

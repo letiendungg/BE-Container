@@ -13,6 +13,8 @@ import { CategoriesModule } from './categories/categories.module';
 import { Category } from './categories/entities/category.entity';
 import { AreasModule } from './areas/areas.module';
 import { Area } from './areas/entities/area.entity';
+import { ShipsModule } from './ships/ships.module';
+import { Ship } from './ships/entities/ship.entity';
 
 @Module({
   imports: [
@@ -23,12 +25,13 @@ import { Area } from './areas/entities/area.entity';
       username: 'root',
       password: 'lehao1911',
       database: 'container',
-      entities: [User, Category, Area],
+      entities: [User, Category, Area, Ship],
       synchronize: true,
     }),
     UsersModule,
     CategoriesModule,
     AreasModule,
+    ShipsModule,
   ],
   controllers: [AppController],
   providers: [
