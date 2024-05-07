@@ -7,6 +7,7 @@ import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { config } from 'dotenv';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
   config();
   app.useGlobalInterceptors(new LoggerInterceptor());
   app.setGlobalPrefix('api/v1');
@@ -20,6 +21,6 @@ async function bootstrap() {
     new AuthorizationGuard(new Reflector()),
   );
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-  await app.listen(3000);
+  await app.listen(5000);
 }
 bootstrap();
