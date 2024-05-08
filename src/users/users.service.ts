@@ -1,4 +1,4 @@
-import { loginDto } from './dto/signin.dto';
+import { loginDto, loginGoogleDto } from './dto/signin.dto';
 import {
   BadRequestException,
   ForbiddenException,
@@ -60,11 +60,6 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException('Email is incorrect!');
     }
-    if (!user.isActive) {
-      throw new BadRequestException(
-        'User is not exist in system or blocked!!!',
-      );
-    }
     const comparePassword = bcrypt.compareSync(
       loginDto.password,
       user.password,
@@ -79,6 +74,34 @@ export class UsersService {
 
     const { password, ...result } = user;
 
+    return { user: result, access_token: token };
+  }
+  async loginGoogle(loginGoogleDto: loginGoogleDto) {
+    const user = await this.findUserByEmail(loginGoogleDto.email);
+    if (user) {
+      const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
+        expiresIn: '1d',
+      });
+      const { password, ...result } = user;
+      return { user: result, access_token: token };
+    }
+    const newUser = new User();
+    newUser.email = loginGoogleDto.email;
+    newUser.avatar = loginGoogleDto.googlePhoto;
+    newUser.fullName = loginGoogleDto.name;
+    const passwordRadom = uid(8);
+    const hashedPassword = bcrypt.hashSync(passwordRadom, 10);
+    newUser.password = hashedPassword;
+    newUser.isActive = true;
+    const createdUser = await this.userRepository.save(newUser);
+    const token = jwt.sign(
+      { email: createdUser.email },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: '1d',
+      },
+    );
+    const { password, ...result } = createdUser;
     return { user: result, access_token: token };
   }
   async validateUserByToken(token: string): Promise<any> {
