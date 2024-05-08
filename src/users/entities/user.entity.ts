@@ -23,13 +23,13 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ default: '' })
   phone: string;
 
   @Column({ default: '' })
   address: string;
 
-  @Column({ default: '' })
+  @Column({ default: '/defaultAvatar.png' })
   avatar: string;
   @Column({ default: '' })
   nation: string;

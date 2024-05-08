@@ -3,9 +3,7 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
-  Delete,
   Put,
   Query,
   UseInterceptors,
@@ -18,7 +16,7 @@ import {
   Public,
   Roles,
 } from 'src/untility/decorators/authorize-role.decorator';
-import { loginDto } from './dto/signin.dto';
+import { loginDto, loginGoogleDto } from './dto/signin.dto';
 import { UserCurrent } from 'src/untility/decorators/current-user.decorator';
 import { User } from './entities/user.entity';
 import { ROLE } from 'src/untility/enum/role-user';
@@ -36,9 +34,15 @@ export class UsersController {
   }
   @Public()
   @Post('login')
-  async login(@Body() signupDto: loginDto) {
-    return await this.usersService.login(signupDto);
+  async login(@Body() loginDto: loginDto) {
+    return await this.usersService.login(loginDto);
   }
+  @Public()
+  @Post('loginGoogle')
+  async loginGoogle(@Body() loginGoogleDto: loginGoogleDto) {
+    return await this.usersService.loginGoogle(loginGoogleDto);
+  }
+
   @Public()
   @Post('confirmCode/:token')
   async confirmCode(@Body('code') code: string, @Param('token') token: string) {
