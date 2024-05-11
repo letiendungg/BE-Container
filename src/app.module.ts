@@ -15,6 +15,11 @@ import { AreasModule } from './areas/areas.module';
 import { Area } from './areas/entities/area.entity';
 import { ShipsModule } from './ships/ships.module';
 import { Ship } from './ships/entities/ship.entity';
+import { ContainersModule } from './containers/containers.module';
+import { Container } from './containers/entities/container.entity';
+import { ApplicationsModule } from './applications/applications.module';
+import { Application } from './applications/entities/application.entity';
+import { TakeTask } from './applications/entities/takeTask.entity';
 
 @Module({
   imports: [
@@ -25,13 +30,15 @@ import { Ship } from './ships/entities/ship.entity';
       username: 'root',
       password: 'lehao1911',
       database: 'container',
-      entities: [User, Category, Area, Ship],
+      entities: [User, Category, Area, Ship, Container, Application, TakeTask],
       synchronize: true,
     }),
     UsersModule,
     CategoriesModule,
     AreasModule,
     ShipsModule,
+    ContainersModule,
+    ApplicationsModule,
   ],
   controllers: [AppController],
   providers: [

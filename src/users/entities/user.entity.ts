@@ -1,3 +1,5 @@
+import { Application } from 'src/applications/entities/application.entity';
+import { TakeTask } from 'src/applications/entities/takeTask.entity';
 import { Area } from 'src/areas/entities/area.entity';
 import { Ship } from 'src/ships/entities/ship.entity';
 import { ROLE } from 'src/untility/enum/role-user';
@@ -58,4 +60,10 @@ export class User {
   area: Area;
   @OneToMany(() => Ship, (ship) => ship.owner)
   ships: Ship[];
+
+  @OneToMany(() => Application, (application) => application.company)
+  applications: Application[];
+
+  @ManyToOne(() => TakeTask, (task) => task.staff)
+  worked: TakeTask[];
 }
