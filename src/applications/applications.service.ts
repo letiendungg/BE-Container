@@ -1,10 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { UpdateApplicationDto } from './dto/update-application.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Application } from './entities/application.entity';
+import { Repository } from 'typeorm';
+import { TakeTask } from './entities/takeTask.entity';
 
 @Injectable()
 export class ApplicationsService {
-  create(createApplicationDto: CreateApplicationDto) {
+  constructor(
+    @InjectRepository(Application)
+    private readonly applicationRepository: Repository<Application>,
+  ) {}
+  async create(createApplicationDto: CreateApplicationDto) {
     return 'This action adds a new application';
   }
 
@@ -12,8 +20,14 @@ export class ApplicationsService {
     return `This action returns all applications`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} application`;
+  async findOne(id: number) {
+    const application = await this.applicationRepository.findOne({
+      where: { id },
+    });
+    if (!application) {
+      throw new NotFoundException('Application not found!!!');
+    }
+    return application;
   }
 
   update(id: number, updateApplicationDto: UpdateApplicationDto) {
