@@ -1,7 +1,9 @@
+import { Container } from 'src/containers/entities/container.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   Timestamp,
   UpdateDateColumn,
@@ -21,4 +23,7 @@ export class Category {
   createdAt: Timestamp;
   @UpdateDateColumn()
   updatedAt: Timestamp;
+
+  @OneToMany(() => Container, (container) => container.type)
+  containers: Container[];
 }
