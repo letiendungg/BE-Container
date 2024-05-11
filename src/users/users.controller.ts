@@ -27,6 +27,7 @@ import { UserList, UsersDTO } from './dto/users.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @UseInterceptors(new SerializeInterceptor(UsersDTO))
   @Public()
   @Post('signup')
   async signup(@Body() signupDto: signupDto) {
