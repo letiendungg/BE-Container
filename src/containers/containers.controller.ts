@@ -1,34 +1,56 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Put,
+} from '@nestjs/common';
 import { ContainersService } from './containers.service';
 import { CreateContainerDto } from './dto/create-container.dto';
 import { UpdateContainerDto } from './dto/update-container.dto';
+import {
+  Public,
+  Roles,
+} from 'src/untility/decorators/authorize-role.decorator';
+import { ROLE } from 'src/untility/enum/role-user';
+import { UserCurrent } from 'src/untility/decorators/current-user.decorator';
+import { User } from 'src/users/entities/user.entity';
 
 @Controller('containers')
 export class ContainersController {
   constructor(private readonly containersService: ContainersService) {}
 
-  @Post()
-  create(@Body() createContainerDto: CreateContainerDto) {
-    return this.containersService.create(createContainerDto);
+  @Public()
+  @Get(':applicationId')
+  async findAllByApplication(@Param('applicationId') applicationId: string) {
+    return await this.containersService.findAllByApplication(+applicationId);
   }
-
-  @Get()
-  findAll() {
-    return this.containersService.findAll();
-  }
-
+  @Public()
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.containersService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.containersService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateContainerDto: UpdateContainerDto) {
-    return this.containersService.update(+id, updateContainerDto);
+  @Roles(ROLE.USER, ROLE.ADMIN)
+  @Post()
+  async create(@Body() createContainerDto: CreateContainerDto) {
+    return await this.containersService.create(createContainerDto);
+  }
+
+  @Put(':id')
+  update(
+    @Param('id') id: string,
+    @Body() updateContainerDto: UpdateContainerDto,
+    @UserCurrent() currentUser: User,
+  ) {
+    return this.containersService.update(id, updateContainerDto, currentUser);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.containersService.remove(+id);
+  async delete(@Param('id') id: string, @UserCurrent() currentUser: User) {
+    return await this.containersService.delete(id, currentUser);
   }
 }

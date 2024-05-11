@@ -14,6 +14,8 @@ export class TakeTask {
   finishTime: Date;
   @Column({ default: false })
   isDone: boolean;
+  @Column({ default: false })
+  isDeleted: boolean;
   @OneToMany(() => Application, (application) => application.staffs)
   application: Application;
   @OneToMany(() => User, (staff) => staff.worked)
