@@ -12,6 +12,8 @@ import { CreateApplicationDto } from './dto/create-application.dto';
 import { UpdateApplicationDto } from './dto/update-application.dto';
 import { Roles } from 'src/untility/decorators/authorize-role.decorator';
 import { ROLE } from 'src/untility/enum/role-user';
+import { UserCurrent } from 'src/untility/decorators/current-user.decorator';
+import { User } from 'src/users/entities/user.entity';
 
 @Controller('applications')
 export class ApplicationsController {
@@ -19,8 +21,14 @@ export class ApplicationsController {
 
   @Roles(ROLE.USER, ROLE.ADMIN)
   @Post()
-  async create(@Body() createApplicationDto: CreateApplicationDto) {
-    return await this.applicationsService.create(createApplicationDto);
+  async create(
+    @Body() createApplicationDto: CreateApplicationDto,
+    @UserCurrent() currentUser: User,
+  ) {
+    return await this.applicationsService.create(
+      createApplicationDto,
+      currentUser,
+    );
   }
 
   @Get()
