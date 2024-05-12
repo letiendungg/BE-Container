@@ -48,11 +48,12 @@ export class UsersService {
     const hashedPassword = bcrypt.hashSync(signupDto.password, 10);
     user.password = hashedPassword;
     user.createToken = token;
-    user.code = uid(6);
-    const createdUser = await this.userRepository.save(user);
+    user.code = uid(6); //eusqk1
+    const createdUser = await this.userRepository.save(user); // da tao user o dtb
     delete createdUser.password;
     delete createdUser.code;
-    //send email to confirm code;
+    //send email to confirm code; noi dung: http//localhost:3000/api/v1/users/confirmCode/user.createToken + ma code
+
     return createdUser;
   }
   async login(loginDto: loginDto): Promise<any> {
@@ -109,7 +110,7 @@ export class UsersService {
     return decode.email;
   }
   async confirmCode(code: string, token: string): Promise<any> {
-    const email = await this.validateUserByToken(code);
+    const email = await this.validateUserByToken(token);
     const user = await this.findUserByEmail(email);
     if (!user) {
       throw new BadRequestException('Invalid token');

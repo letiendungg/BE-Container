@@ -23,13 +23,13 @@ import { ROLE } from 'src/untility/enum/role-user';
 import { SerializeInterceptor } from 'src/untility/interceptor/serialize.interceptor';
 import { UserList, UsersDTO } from './dto/users.dto';
 
-@Controller('users')
+@Controller('users') //localhost:3000/api/v1/users
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @UseInterceptors(new SerializeInterceptor(UsersDTO))
   @Public()
-  @Post('signup')
+  @Post('signup') //localhost:3000/api/v1/users/signup
   async signup(@Body() signupDto: signupDto) {
     return await this.usersService.signup(signupDto);
   }
