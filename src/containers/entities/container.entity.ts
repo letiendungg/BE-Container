@@ -16,6 +16,8 @@ export class Container {
   id: string;
   @Column()
   weight: number;
+  @Column()
+  code: string;
   @Column({ default: false })
   isDeleted: boolean;
   @CreateDateColumn()

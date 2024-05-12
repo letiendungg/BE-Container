@@ -28,12 +28,13 @@ export class ApplicationsService {
     const application = new Application();
     Object.assign(application, createApplicationDto);
 
-    const containers = createApplicationDto.containersData.forEach(
-      (container) => {
-        container.application = application;
-        return await this.containerService.create(container);
+    const containerPromises = createApplicationDto.containersData.map(
+      (containerData) => {
+        return this.containerService.create(containerData);
       },
     );
+    const containers = await Promise.all(containerPromises);
+
     application.sentDate = new Date();
     application.containers = containers;
     application.status = StatusEnum.Pending;

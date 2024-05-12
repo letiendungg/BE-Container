@@ -12,6 +12,7 @@ import { ApplicationsService } from 'src/applications/applications.service';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { CategoriesService } from 'src/categories/categories.service';
+import { uid } from 'uid';
 
 @Injectable()
 export class ContainersService {
@@ -55,6 +56,8 @@ export class ContainersService {
       createContainerDto.type,
     );
     container.type = category;
+    const code = uid(6);
+    container.code = code;
     return await this.containerRepository.save(container);
   }
 
