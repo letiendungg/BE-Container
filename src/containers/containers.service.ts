@@ -11,6 +11,8 @@ import { Repository } from 'typeorm';
 import { ApplicationsService } from 'src/applications/applications.service';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
+import { CategoriesService } from 'src/categories/categories.service';
+import { uid } from 'uid';
 
 @Injectable()
 export class ContainersService {
@@ -19,6 +21,7 @@ export class ContainersService {
     private readonly containerRepository: Repository<Container>,
     private readonly applicationService: ApplicationsService,
     private readonly userService: UsersService,
+    private readonly categoryService: CategoriesService,
   ) {}
   async findContainerById(idContainer: string) {
     const container = await this.containerRepository.findOne({
@@ -49,6 +52,12 @@ export class ContainersService {
   async create(createContainerDto: CreateContainerDto) {
     const container = new Container();
     Object.assign(container, createContainerDto);
+    const category = await this.categoryService.findOne(
+      createContainerDto.type,
+    );
+    container.type = category;
+    const code = uid(6);
+    container.code = code;
     return await this.containerRepository.save(container);
   }
 

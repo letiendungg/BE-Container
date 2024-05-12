@@ -29,7 +29,7 @@ export class Application {
   to: string;
   @Column()
   sentDate: Date;
-  @Column()
+  @Column({ nullable: true })
   estimatedDate: Date;
   @Column()
   phoneSent: string;

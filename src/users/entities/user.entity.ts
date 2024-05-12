@@ -14,7 +14,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity() // Khai bao doi tuong trong sql
 export class User {
   @PrimaryGeneratedColumn()
   id: number;

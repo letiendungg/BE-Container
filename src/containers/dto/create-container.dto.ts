@@ -1,10 +1,13 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 import { Application } from 'src/applications/entities/application.entity';
 import { Category } from 'src/categories/entities/category.entity';
+import { TypeEnum } from 'src/untility/enum/type.enum';
 
 export class CreateContainerDto {
   @IsNotEmpty()
-  type: Category;
+  @IsNumber()
+  type: number;
+  @IsOptional()
   @IsNotEmpty()
   application: Application;
   @IsNotEmpty()

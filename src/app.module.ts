@@ -20,7 +20,6 @@ import { Container } from './containers/entities/container.entity';
 import { ApplicationsModule } from './applications/applications.module';
 import { Application } from './applications/entities/application.entity';
 import { TakeTask } from './applications/entities/takeTask.entity';
-import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
@@ -40,7 +39,6 @@ import { TasksModule } from './tasks/tasks.module';
     ShipsModule,
     ContainersModule,
     ApplicationsModule,
-    TasksModule,
   ],
   controllers: [AppController],
   providers: [
