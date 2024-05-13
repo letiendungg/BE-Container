@@ -106,20 +106,25 @@ export class UsersService {
     return { user: result, access_token: token };
   }
   async validateUserByToken(token: string): Promise<any> {
-    const decode = jwt.decode(token) as JwtPayload;
-    return decode.email;
+    try {
+      const decode = jwt.decode(token) as JwtPayload;
+      return decode.email;
+    } catch (error) {
+      throw new BadRequestException('token invalid');
+    }
   }
   async confirmCode(code: string, token: string): Promise<any> {
     const email = await this.validateUserByToken(token);
-    const user = await this.findUserByEmail(email);
+    const user = await this.userRepository.findOne({ where: { email } });
     if (!user) {
       throw new BadRequestException('Invalid token');
     }
     if (code !== user.code) {
-      throw new BadRequestException('Code is incorrect, please check again');
+      throw new BadRequestException('OTP Code is incorrect');
     }
     user.isActive = true;
     user.code = '';
+    user.createToken = '';
     await this.userRepository.save(user);
     return 'Confirm success!!!';
   }
