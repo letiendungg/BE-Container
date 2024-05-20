@@ -25,6 +25,8 @@ import { Port } from './ships/entities/port.entity';
 import { ShipSchedule } from './ships/entities/shipSchedule';
 import { Cluster } from './areas/entities/cluster.entity';
 import { Location } from './areas/entities/location.entity';
+import { DocumentsModule } from './documents/documents.module';
+import { Document } from './documents/entities/document.entity';
 
 @Module({
   imports: [
@@ -48,6 +50,7 @@ import { Location } from './areas/entities/location.entity';
         ShipSchedule,
         Cluster,
         Location,
+        Document,
       ],
       synchronize: true,
     }),
@@ -57,6 +60,7 @@ import { Location } from './areas/entities/location.entity';
     ShipsModule,
     ContainersModule,
     ApplicationsModule,
+    DocumentsModule,
   ],
   controllers: [AppController],
   providers: [
