@@ -12,6 +12,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { TakeTask } from './takeTask.entity';
+import { Location } from 'src/areas/entities/location.entity';
 
 @Entity()
 export class Application {
@@ -53,4 +54,7 @@ export class Application {
 
   @ManyToOne(() => TakeTask, (takeTask) => takeTask.application)
   staffs: TakeTask[];
+
+  @ManyToOne(() => Location, (location) => location.applications)
+  location: Location;
 }

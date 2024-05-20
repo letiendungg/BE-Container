@@ -20,6 +20,11 @@ import { Container } from './containers/entities/container.entity';
 import { ApplicationsModule } from './applications/applications.module';
 import { Application } from './applications/entities/application.entity';
 import { TakeTask } from './applications/entities/takeTask.entity';
+import { ContainerType } from './containers/entities/containerType.entity';
+import { Port } from './ships/entities/port.entity';
+import { ShipSchedule } from './ships/entities/shipSchedule';
+import { Cluster } from './areas/entities/cluster.entity';
+import { Location } from './areas/entities/location.entity';
 
 @Module({
   imports: [
@@ -30,7 +35,20 @@ import { TakeTask } from './applications/entities/takeTask.entity';
       username: 'root',
       password: 'lehao1911',
       database: 'container',
-      entities: [User, Category, Area, Ship, Container, Application, TakeTask],
+      entities: [
+        User,
+        Category,
+        Area,
+        Ship,
+        Container,
+        Application,
+        TakeTask,
+        ContainerType,
+        Port,
+        ShipSchedule,
+        Cluster,
+        Location,
+      ],
       synchronize: true,
     }),
     UsersModule,

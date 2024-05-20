@@ -7,10 +7,11 @@ import { ApplicationsModule } from 'src/applications/applications.module';
 import { UsersModule } from 'src/users/users.module';
 import { Category } from 'src/categories/entities/category.entity';
 import { CategoriesModule } from 'src/categories/categories.module';
+import { ContainerType } from './entities/containerType.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Container]),
+    TypeOrmModule.forFeature([Container, ContainerType]),
     forwardRef(() => ApplicationsModule),
     UsersModule,
     CategoriesModule,

@@ -9,6 +9,7 @@ import {
   Timestamp,
   UpdateDateColumn,
 } from 'typeorm';
+import { ContainerType } from './containerType.entity';
 
 @Entity()
 export class Container {
@@ -30,4 +31,9 @@ export class Container {
   type: Category;
   @ManyToOne(() => Application, (application) => application.containers)
   application: Application;
+  @ManyToOne(
+    () => ContainerType,
+    (containerType) => containerType.containersType,
+  )
+  typeContainer: ContainerType;
 }

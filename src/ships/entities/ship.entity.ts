@@ -4,10 +4,12 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   Timestamp,
   UpdateDateColumn,
 } from 'typeorm';
+import { ShipSchedule } from './shipSchedule';
 
 @Entity()
 export class Ship {
@@ -31,4 +33,6 @@ export class Ship {
 
   @ManyToOne(() => User, (user) => user.ships)
   owner: User;
+  @OneToMany(() => ShipSchedule, (shipSchedule) => shipSchedule.ship)
+  schedules: ShipSchedule[];
 }
