@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { Cluster } from './cluster.entity';
 import { Application } from 'src/applications/entities/application.entity';
+import { Container } from 'src/containers/entities/container.entity';
 
 @Entity()
 export class Location {
@@ -19,6 +20,6 @@ export class Location {
 
   @ManyToOne(() => Cluster, (clusterr) => clusterr.locations)
   cluser: Cluster;
-  @OneToMany(() => Application, (application) => application.location)
-  applications: Application[];
+  @OneToMany(() => Container, (container) => container.location)
+  containers: Application[];
 }

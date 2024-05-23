@@ -21,12 +21,13 @@ import { ApplicationsModule } from './applications/applications.module';
 import { Application } from './applications/entities/application.entity';
 import { TakeTask } from './applications/entities/takeTask.entity';
 import { ContainerType } from './containers/entities/containerType.entity';
-import { Port } from './ships/entities/port.entity';
 import { ShipSchedule } from './ships/entities/shipSchedule';
 import { Cluster } from './areas/entities/cluster.entity';
 import { Location } from './areas/entities/location.entity';
 import { DocumentsModule } from './documents/documents.module';
 import { Document } from './documents/entities/document.entity';
+import { Destination } from './ships/entities/destination.entity';
+import { Port } from './ships/entities/port.entity';
 
 @Module({
   imports: [
@@ -46,11 +47,12 @@ import { Document } from './documents/entities/document.entity';
         Application,
         TakeTask,
         ContainerType,
-        Port,
+        Destination,
         ShipSchedule,
         Cluster,
         Location,
         Document,
+        Port,
       ],
       synchronize: true,
     }),

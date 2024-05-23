@@ -1,12 +1,15 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { ShipSchedule } from './shipSchedule';
 
 @Entity()
 export class Port {
   @PrimaryGeneratedColumn()
   id: number;
+  @Column()
+  name: string;
+  @Column()
+  slot: number;
 
-  @Column()
-  portName: string;
-  @Column()
-  nation: string;
+  @OneToMany(() => ShipSchedule, (shipSchedule) => shipSchedule.port)
+  ships: ShipSchedule[];
 }

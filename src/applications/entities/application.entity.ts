@@ -56,9 +56,6 @@ export class Application {
 
   @ManyToOne(() => TakeTask, (takeTask) => takeTask.application)
   staffs: TakeTask[];
-
-  @ManyToOne(() => Location, (location) => location.applications)
-  location: Location;
   @OneToOne(() => Document, (doc) => doc.application)
   document: Document;
 }

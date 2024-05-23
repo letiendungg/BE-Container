@@ -23,6 +23,4 @@ export class Cluster {
   area: Area;
   @OneToMany(() => Location, (location) => location.cluser)
   locations: Location[];
-  @OneToMany(() => ShipSchedule, (shipSchedule) => shipSchedule.cluster)
-  parks: ShipSchedule[];
 }

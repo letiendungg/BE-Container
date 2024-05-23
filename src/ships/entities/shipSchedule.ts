@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { Ship } from './ship.entity';
 import { Cluster } from 'src/areas/entities/cluster.entity';
+import { Port } from './port.entity';
 
 @Entity()
 export class ShipSchedule {
@@ -20,6 +21,6 @@ export class ShipSchedule {
   destinations: { portName: string; dateArrive: Date }[];
   @ManyToOne(() => Ship, (ship) => ship.schedules)
   ship: Ship;
-  @ManyToOne(() => Cluster, (cluster) => cluster.parks)
-  cluster: Cluster;
+  @ManyToOne(() => Port, (port) => port.ships)
+  port: Port;
 }

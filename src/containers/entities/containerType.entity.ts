@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Container } from './container.entity';
+import { Location } from 'src/areas/entities/location.entity';
 
 @Entity()
 export class ContainerType {
