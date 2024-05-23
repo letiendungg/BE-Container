@@ -12,4 +12,7 @@ export class CreateContainerDto {
   application: Application;
   @IsNotEmpty()
   weight: number;
+  @IsNotEmpty()
+  @IsNumber()
+  typeContainer: number;
 }

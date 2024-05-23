@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
+  Put,
 } from '@nestjs/common';
 import { ApplicationsService } from './applications.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
@@ -30,23 +32,27 @@ export class ApplicationsController {
       currentUser,
     );
   }
-
+  @Roles(ROLE.USER, ROLE.ADMIN)
   @Get()
-  findAll() {
-    return this.applicationsService.findAll();
+  async findAll(
+    @UserCurrent() currentUser: User,
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '10',
+  ) {
+    return await this.applicationsService.findAll(+page, +limit, currentUser);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.applicationsService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.applicationsService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(
+  @Put(':id')
+  async update(
     @Param('id') id: string,
     @Body() updateApplicationDto: UpdateApplicationDto,
   ) {
-    return this.applicationsService.update(+id, updateApplicationDto);
+    return await this.applicationsService.update(+id, updateApplicationDto);
   }
 
   @Delete(':id')

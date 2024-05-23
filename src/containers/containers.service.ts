@@ -13,12 +13,18 @@ import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { CategoriesService } from 'src/categories/categories.service';
 import { uid } from 'uid';
+import { ContainerType } from './entities/containerType.entity';
+import { Application } from 'src/applications/entities/application.entity';
 
 @Injectable()
 export class ContainersService {
   constructor(
     @InjectRepository(Container)
     private readonly containerRepository: Repository<Container>,
+    @InjectRepository(ContainerType)
+    private readonly typeContainerRepository: Repository<ContainerType>,
+    @InjectRepository(Application)
+    private readonly applicationRepository: Repository<Application>,
     private readonly applicationService: ApplicationsService,
     private readonly userService: UsersService,
     private readonly categoryService: CategoriesService,
@@ -48,13 +54,28 @@ export class ContainersService {
     }
     return container;
   }
-
+  async getTypeContainer() {
+    return await this.typeContainerRepository.find();
+  }
+  async findTypeContainerById(id: number) {
+    const typeContainer = await this.typeContainerRepository.findOne({
+      where: { id },
+    });
+    if (!typeContainer) {
+      throw new NotFoundException('Type Container not found!');
+    }
+    return typeContainer;
+  }
   async create(createContainerDto: CreateContainerDto) {
     const container = new Container();
     Object.assign(container, createContainerDto);
     const category = await this.categoryService.findOne(
       createContainerDto.type,
     );
+    const typeContainer = await this.findTypeContainerById(
+      createContainerDto.typeContainer,
+    );
+    container.typeContainer = typeContainer;
     container.type = category;
     const code = uid(6);
     container.code = code;
@@ -78,7 +99,14 @@ export class ContainersService {
       throw new ForbiddenException('Your are not allowed update it');
     }
     Object.assign(container, updateContainerDto);
-    return await this.containerRepository.save(container);
+    await this.containerRepository.save(container);
+    const applicationUpdate = await this.applicationService.findOne(
+      container.application.id,
+    );
+    return await this.applicationService.updateTotalPriceApplication(
+      applicationUpdate.id,
+      applicationUpdate.containers,
+    );
   }
 
   async delete(id: string, currentUser: User) {
@@ -94,6 +122,13 @@ export class ContainersService {
       throw new ForbiddenException('Your are not allowed update it');
     }
     container.isDeleted = true;
-    return await this.containerRepository.save(container);
+    await this.containerRepository.save(container);
+    const applicationUpdate = await this.applicationService.findOne(
+      container.application.id,
+    );
+    return await this.applicationService.updateTotalPriceApplication(
+      applicationUpdate.id,
+      applicationUpdate.containers,
+    );
   }
 }

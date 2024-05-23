@@ -33,6 +33,11 @@ export class ContainersController {
   async findOne(@Param('id') id: string) {
     return await this.containersService.findOne(id);
   }
+  @Public()
+  @Get('/typeContainer')
+  async getTypeContainer() {
+    return await this.containersService.getTypeContainer();
+  }
 
   @Roles(ROLE.USER, ROLE.ADMIN)
   @Post()
