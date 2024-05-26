@@ -10,6 +10,7 @@ import { ContainersModule } from 'src/containers/containers.module';
 import { ContainersService } from 'src/containers/containers.service';
 import { CategoriesService } from 'src/categories/categories.service';
 import { CategoriesModule } from 'src/categories/categories.module';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { CategoriesModule } from 'src/categories/categories.module';
     UsersModule,
     CategoriesModule,
     forwardRef(() => ContainersModule),
+    HttpModule,
   ],
   controllers: [ApplicationsController],
   providers: [ApplicationsService, TaskService],

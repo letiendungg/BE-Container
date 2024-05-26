@@ -12,7 +12,8 @@ import {
 import { ApplicationsService } from './applications.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { UpdateApplicationDto } from './dto/update-application.dto';
-import { Roles } from 'src/untility/decorators/authorize-role.decorator';
+import { QuickQuoteDto } from './dto/quick-quote.dto';
+import { Public, Roles } from 'src/untility/decorators/authorize-role.decorator';
 import { ROLE } from 'src/untility/enum/role-user';
 import { UserCurrent } from 'src/untility/decorators/current-user.decorator';
 import { User } from 'src/users/entities/user.entity';
@@ -58,5 +59,11 @@ export class ApplicationsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.applicationsService.remove(+id);
+  }
+
+  @Public()
+  @Get("quick-quote")
+  async quickquote(@Body() createQuickQuote: QuickQuoteDto): Promise<any> {
+    return this.applicationsService.quickQuote(createQuickQuote);
   }
 }

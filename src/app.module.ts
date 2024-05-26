@@ -36,7 +36,7 @@ import { Port } from './ships/entities/port.entity';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: 'lehao1911',
+      password: 'lyductin19102002',
       database: 'container',
       entities: [
         User,
