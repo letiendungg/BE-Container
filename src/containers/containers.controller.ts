@@ -18,6 +18,7 @@ import {
 import { ROLE } from 'src/untility/enum/role-user';
 import { UserCurrent } from 'src/untility/decorators/current-user.decorator';
 import { User } from 'src/users/entities/user.entity';
+import { ContainerType } from './entities/containerType.entity';
 
 @Controller('containers')
 export class ContainersController {
@@ -34,11 +35,15 @@ export class ContainersController {
     return await this.containersService.findOne(id);
   }
   @Public()
-  @Get('/typeContainer')
-  async getTypeContainer() {
+  @Get('getAlltypeContainer')
+  async getTypeContainer(): Promise<ContainerType[]> {
     return await this.containersService.getTypeContainer();
   }
-
+  @Public()
+  @Get('typeContainer/:id')
+  async getTypeContainerById(@Param('id') id: string): Promise<ContainerType> {
+    return await this.containersService.findTypeContainerById(+id);
+  }
   @Roles(ROLE.USER, ROLE.ADMIN)
   @Post()
   async create(@Body() createContainerDto: CreateContainerDto) {

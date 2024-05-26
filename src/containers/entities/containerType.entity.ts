@@ -11,6 +11,8 @@ export class ContainerType {
   @Column()
   percenPrice: number;
 
+  @Column({ default: false })
+  isDeleted: boolean;
   @OneToMany(() => Container, (container) => container.typeContainer)
   containersType: Container[];
 }

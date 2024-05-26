@@ -55,7 +55,12 @@ export class ContainersService {
     return container;
   }
   async getTypeContainer() {
-    return await this.typeContainerRepository.find();
+    console.log('call');
+    const typeContainers = await this.typeContainerRepository.find();
+    if (typeContainers.length === 0) {
+      throw new NotFoundException('Type Container not found!');
+    }
+    return typeContainers;
   }
   async findTypeContainerById(id: number) {
     const typeContainer = await this.typeContainerRepository.findOne({

@@ -10,6 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ShipSchedule } from './shipSchedule';
+import { Application } from 'src/applications/entities/application.entity';
 
 @Entity()
 export class Ship {
@@ -35,4 +36,7 @@ export class Ship {
   owner: User;
   @OneToMany(() => ShipSchedule, (shipSchedule) => shipSchedule.ship)
   schedules: ShipSchedule[];
+
+  @OneToMany(() => Application, (application) => application.ship)
+  applications: Ship[];
 }
