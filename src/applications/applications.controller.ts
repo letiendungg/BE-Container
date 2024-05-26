@@ -13,7 +13,11 @@ import { ApplicationsService } from './applications.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { UpdateApplicationDto } from './dto/update-application.dto';
 import { QuickQuoteDto } from './dto/quick-quote.dto';
-import { Public, Roles } from 'src/untility/decorators/authorize-role.decorator';
+import {
+  Public,
+  Roles,
+} from 'src/untility/decorators/authorize-role.decorator';
+
 import { ROLE } from 'src/untility/enum/role-user';
 import { UserCurrent } from 'src/untility/decorators/current-user.decorator';
 import { User } from 'src/users/entities/user.entity';
@@ -21,7 +25,11 @@ import { User } from 'src/users/entities/user.entity';
 @Controller('applications')
 export class ApplicationsController {
   constructor(private readonly applicationsService: ApplicationsService) {}
-
+  @Public()
+  @Get('quick-quote')
+  async quickquote(@Body() createQuickQuote: QuickQuoteDto): Promise<any> {
+    return this.applicationsService.quickQuote(createQuickQuote);
+  }
   @Roles(ROLE.USER, ROLE.ADMIN)
   @Post()
   async create(
@@ -59,11 +67,5 @@ export class ApplicationsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.applicationsService.remove(+id);
-  }
-
-  @Public()
-  @Get("quick-quote")
-  async quickquote(@Body() createQuickQuote: QuickQuoteDto): Promise<any> {
-    return this.applicationsService.quickQuote(createQuickQuote);
   }
 }

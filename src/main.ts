@@ -21,6 +21,6 @@ async function bootstrap() {
     new AuthorizationGuard(new Reflector()),
   );
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-  await app.listen(5050);
+  await app.listen(5000);
 }
 bootstrap();
