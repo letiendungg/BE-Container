@@ -37,7 +37,7 @@ export class UsersService {
     const userExist = await this.findUserByEmail(signupDto.email);
     if (userExist) {
       throw new BadRequestException(
-        'Email is existing !!! Please t1ry another email',
+        'Email is existing !!! Please try another email',
       );
     }
 

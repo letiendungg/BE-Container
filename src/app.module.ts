@@ -28,7 +28,7 @@ import { TakeTask } from './applications/entities/takeTask.entity';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: 'lehao1911',
+      password: 'lyductin19102002',
       database: 'container',
       entities: [User, Category, Area, Ship, Container, Application, TakeTask],
       synchronize: true,
