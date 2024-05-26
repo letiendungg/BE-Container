@@ -19,6 +19,8 @@ import { containerType } from 'src/untility/enum/container-type';
 import { productType } from 'src/untility/enum/product-type';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
+import { ROLE } from 'src/untility/enum/role-user';
+import { Container } from 'src/containers/entities/container.entity';
 
 @Injectable()
 export class ApplicationsService {
@@ -30,6 +32,22 @@ export class ApplicationsService {
     @Inject(forwardRef(() => ContainersService))
     private readonly containerService: ContainersService,
   ) {}
+
+  calculateTotalPrice(containers: Container[]) {
+    let price = 0;
+    containers.forEach((container) => {
+      price = price + container.typeContainer.percenPrice * container.weight;
+    });
+    return price;
+  }
+  async updateTotalPriceApplication(
+    applicationId: number,
+    containers: Container[],
+  ) {
+    const application = await this.findOne(applicationId);
+    application.price = this.calculateTotalPrice(containers);
+    return await this.applicationRepository.save(application);
+  }
   async create(createApplicationDto: CreateApplicationDto, currentUser: User) {
     const application = new Application();
     Object.assign(application, createApplicationDto);
@@ -41,28 +59,47 @@ export class ApplicationsService {
     );
     const containers = await Promise.all(containerPromises);
 
+    const price = this.calculateTotalPrice(containers);
+    application.price = price;
     application.sentDate = new Date();
     application.containers = containers;
     application.status = StatusEnum.Pending;
     return await this.applicationRepository.save(application);
   }
 
-  findAll() {
-    return `This action returns all applications`;
+  async findAll(page: number, limit: number, currentUser: User) {
+    if (currentUser.role === ROLE.ADMIN) {
+      currentUser = undefined;
+    }
+    const [applications, total] = await this.applicationRepository.findAndCount(
+      {
+        skip: (page - 1) * limit,
+        take: limit,
+        order: { createdAt: 'DESC' },
+        where: { company: currentUser },
+      },
+    );
+    const pages = Math.ceil(total / limit);
+    return { page, limit, applications, pages };
   }
 
   async findOne(id: number) {
     const application = await this.applicationRepository.findOne({
       where: { id },
     });
+    const containers = application.containers.filter(
+      (container) => container.isDeleted === false,
+    );
+    application.containers = containers;
     if (!application) {
       throw new NotFoundException('Application not found!!!');
     }
     return application;
   }
 
-  update(id: number, updateApplicationDto: UpdateApplicationDto) {
-    return `This action updates a #${id} application`;
+  async update(id: number, updateApplicationDto: UpdateApplicationDto) {
+    const application = await this.findOne(id);
+    Object.assign(application, updateApplicationDto);
   }
 
   remove(id: number) {

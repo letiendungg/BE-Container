@@ -7,11 +7,15 @@ import {
   Entity,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   Timestamp,
   UpdateDateColumn,
 } from 'typeorm';
 import { TakeTask } from './takeTask.entity';
+import { Location } from 'src/areas/entities/location.entity';
+import { Document } from 'src/documents/entities/document.entity';
+import { Ship } from 'src/ships/entities/ship.entity';
 
 @Entity()
 export class Application {
@@ -53,4 +57,8 @@ export class Application {
 
   @ManyToOne(() => TakeTask, (takeTask) => takeTask.application)
   staffs: TakeTask[];
+  @OneToOne(() => Document, (doc) => doc.application)
+  document: Document;
+  @ManyToOne(() => Ship, (ship) => ship.applications)
+  ship: Ship;
 }

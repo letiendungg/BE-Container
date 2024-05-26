@@ -20,6 +20,14 @@ import { Container } from './containers/entities/container.entity';
 import { ApplicationsModule } from './applications/applications.module';
 import { Application } from './applications/entities/application.entity';
 import { TakeTask } from './applications/entities/takeTask.entity';
+import { ContainerType } from './containers/entities/containerType.entity';
+import { ShipSchedule } from './ships/entities/shipSchedule';
+import { Cluster } from './areas/entities/cluster.entity';
+import { Location } from './areas/entities/location.entity';
+import { DocumentsModule } from './documents/documents.module';
+import { Document } from './documents/entities/document.entity';
+import { Destination } from './ships/entities/destination.entity';
+import { Port } from './ships/entities/port.entity';
 
 @Module({
   imports: [
@@ -30,7 +38,22 @@ import { TakeTask } from './applications/entities/takeTask.entity';
       username: 'root',
       password: 'lyductin19102002',
       database: 'container',
-      entities: [User, Category, Area, Ship, Container, Application, TakeTask],
+      entities: [
+        User,
+        Category,
+        Area,
+        Ship,
+        Container,
+        Application,
+        TakeTask,
+        ContainerType,
+        Destination,
+        ShipSchedule,
+        Cluster,
+        Location,
+        Document,
+        Port,
+      ],
       synchronize: true,
     }),
     UsersModule,
@@ -39,6 +62,7 @@ import { TakeTask } from './applications/entities/takeTask.entity';
     ShipsModule,
     ContainersModule,
     ApplicationsModule,
+    DocumentsModule,
   ],
   controllers: [AppController],
   providers: [

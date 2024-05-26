@@ -9,6 +9,8 @@ import {
   Timestamp,
   UpdateDateColumn,
 } from 'typeorm';
+import { ContainerType } from './containerType.entity';
+import { Location } from 'src/areas/entities/location.entity';
 
 @Entity()
 export class Container {
@@ -30,4 +32,11 @@ export class Container {
   type: Category;
   @ManyToOne(() => Application, (application) => application.containers)
   application: Application;
+  @ManyToOne(
+    () => ContainerType,
+    (containerType) => containerType.containersType,
+  )
+  typeContainer: ContainerType;
+  @ManyToOne(() => Location, (location) => location.containers)
+  location: Location;
 }
