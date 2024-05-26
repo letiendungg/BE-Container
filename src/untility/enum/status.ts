@@ -13,6 +13,6 @@ export enum StatusEnum {
 }
 
 export enum DirectionEnum {
-  DepartureShipment = 'departureShipment',
-  ArrivalShipment = 'arrivalShipment',
+  DepartureShipment = 'Departure Shipment',
+  ArrivalShipment = 'Arrival Shipment',
 }
